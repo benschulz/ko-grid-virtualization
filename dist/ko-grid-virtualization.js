@@ -1,8 +1,0 @@
-/*
- Copyright (c) 2015, Ben Schulz
- License: BSD 3-clause (http://opensource.org/licenses/BSD-3-Clause)
-*/
-function l(e,r){return function(f){return f}(function(f,m,b){b.defineExtension("ko-grid-virtualization",{s:function(c){c.before("body").insert('<tbody class="ko-grid-virtualization-before-spacer"><tr data-bind="style: { height: extensions.virtualization.__beforeHeight() + \'px\' }"><td></td></tr></tbody>');c.after("body").insert('<tbody class="ko-grid-virtualization-after-spacer"><tr data-bind="style: { height: extensions.virtualization.__afterHeight() + \'px\' }"><td></td></tr></tbody>')},q:function(c,
-f,a){function b(){a.data.limit(Math.ceil((d.clientHeight-1)/g)+1);h()}function e(){var b=Math.floor(a.data.offset()+(d.scrollTop-k())/g);a.data.offset(b);h()}function h(){var b=d.scrollTop,e=Math.max(0,(a.data.view.filteredSize()-a.data.offset()-a.data.limit())*g),f=d.clientHeight,c=n.getBoundingClientRect(),c=p.getBoundingClientRect().top-c.bottom;k(b-b%g);q(Math.max(0,e+c-f))}var k=m.observable(),q=m.observable();this.__beforeHeight=k;this.__afterHeight=q;var d,n,p;a.postApplyBindings(function(){d=
-a.element.querySelector(".ko-grid-table-scroller");n=a.element.querySelector(".ko-grid-virtualization-before-spacer");p=a.element.querySelector(".ko-grid-virtualization-after-spacer");a.data.view.filteredSize.subscribe(h);a.layout.afterRelayout(b);d.addEventListener("scroll",e)});var g=25}});return b.declareExtensionAlias("virtualization","ko-grid-virtualization")}({},r,e))}
-"function"===typeof define&&define.amd?define(["ko-grid","knockout","ko-data-source","ko-indexed-repeat"],l):window["ko-grid-virtualization"]=l(window.ko.bindingHandlers.grid,window.ko);
