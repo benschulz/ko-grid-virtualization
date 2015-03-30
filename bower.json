@@ -1,0 +1,19 @@
+{
+  "name": "ko-grid-virtualization",
+  "main": "dist/ko-grid-virtualization.js",
+  "description": "A ko-grid extension providing row virtualization.",
+  "authors": ["Ben Schulz (https://github.com/benschulz)"],
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "ko-grid",
+    "virtualization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/benschulz/ko-grid-virtualization.git"
+  },
+  "dependencies": {
+    "knockout": "^3.3.0",
+    "ko-grid": "benschulz/ko-grid"
+  }
+}
