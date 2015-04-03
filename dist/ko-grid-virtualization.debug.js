@@ -27,40 +27,29 @@ ko_grid_virtualization_virtualization = function (module, ko, koGrid) {
         scroller = grid.element.querySelector('.ko-grid-table-scroller');
         beforeSpacer = grid.element.querySelector('.ko-grid-virtualization-before-spacer');
         afterSpacer = grid.element.querySelector('.ko-grid-virtualization-after-spacer');
-        grid.data.view.filteredSize.subscribe(recomputeSpacerSizes);
         grid.layout.afterRelayout(recomputeLimit);
+        grid.data.view.filteredSize.subscribe(recomputeAfterSpacerSizes);
         scroller.addEventListener('scroll', recomputeOffset);
       });
       // TODO guesstimate a good row height
       var averageRowHeight = 25;
-      var lastScrollTop = 0, excess = 0, offsetModulo = 0;
       function recomputeLimit() {
-        var limit = Math.ceil((scroller.clientHeight - 1) / averageRowHeight) + 1;
+        var limit = Math.ceil((scroller.clientHeight - 1) / averageRowHeight) + 2;
         grid.data.limit(limit);
-        recomputeSpacerSizes();
       }
       function recomputeOffset() {
         var scrollTop = scroller.scrollTop;
-        var scrollDelta = scrollTop - lastScrollTop;
-        var rowDelta = Math.floor((excess + scrollDelta) / averageRowHeight);
-        var offset = grid.data.offset() + rowDelta;
-        lastScrollTop = scrollTop;
-        offsetModulo = offset & 1;
+        var pixelDelta = scroller.getBoundingClientRect().top - beforeSpacer.getBoundingClientRect().bottom;
+        var rowDelta = Math.floor(pixelDelta / averageRowHeight);
+        var offset = Math.max(0, Math.min(grid.data.view.filteredSize() - grid.data.view.size() + 2, grid.data.offset() + rowDelta));
+        var offsetModulo = offset & 1;
         offset -= offsetModulo;
-        excess = offsetModulo * averageRowHeight + scrollTop % averageRowHeight;
         grid.data.offset(offset);
-        recomputeSpacerSizes();
+        beforeHeight(scrollTop - offsetModulo * averageRowHeight - scrollTop % averageRowHeight);
+        recomputeAfterSpacerSizes();
       }
-      function recomputeSpacerSizes() {
-        var scrolled = scroller.scrollTop;
-        var remaining = Math.max(0, grid.data.view.filteredSize() - grid.data.offset() - grid.data.limit()) * averageRowHeight;
-        var viewing = scroller.clientHeight;
-        var beforeBounds = beforeSpacer.getBoundingClientRect();
-        var afterBounds = afterSpacer.getBoundingClientRect();
-        var contentHeight = afterBounds.top - beforeBounds.bottom - (scrolled - beforeHeight());
-        window.console.log('contentHeight: ' + contentHeight + ', bbb: ' + beforeBounds.bottom + ', abt: ' + afterBounds.top);
-        beforeHeight(scrolled - offsetModulo * averageRowHeight - scrolled % averageRowHeight);
-        afterHeight(Math.max(0, remaining + contentHeight - viewing));
+      function recomputeAfterSpacerSizes() {
+        afterHeight(Math.max(0, grid.data.view.filteredSize() - grid.data.offset() - grid.data.limit()) * averageRowHeight);
       }
     }
   });
